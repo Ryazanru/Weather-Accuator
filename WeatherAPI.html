@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WeatherAPI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <style>
+    .temps {
+      font-size: x-large;
+    }
+
+    .forecast-title {
+      font-size: 40px;
+    }
+
+    .search-text {
+      margin: 0px;
+      margin-bottom: 3px;
+    }
+
+    .search-buttons {
+      margin-bottom: 18px;
+      width: 171.16px;
+    }
+
+    
+
+    .image-size{
+      width: 195px;
+      padding-bottom: 16px;
+    }
+
+    .row-container{
+      
+      padding: 15px;
+      margin: 0px;
+      margin-top: 45px;
+    }
+
+    .nav-search-container{
+      background-color: mediumturquoise;
+      padding-bottom: 13px;
+      padding-top: 5px;
+    }
+
+    .currweather{
+          display:flex;
+          flex-direction: column;
+          align-items: center;
+          border: solid;
+          border-width: thin;
+    }
+
+    .forecastdate{
+      text-align: center;
+    }
+
+    .temprops{
+      display:flex;
+      justify-content: space-around;
+    }
+
+    .daydemens{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .nightdemens{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .forecastimage{
+      width: 150px;
+      padding-bottom: 16px;
+    }
+
+    .boxdetails{
+      margin-left: 35px;
+      margin-bottom: 35px;
+    }
+
+    .carddetails{
+      background-color: white;
+      box-shadow: 0px 0px 20px 0px;
+      border-style: none;
+      border-radius: 25px;
+      
+    }
+
+    .carddetails:hover{
+      transform: scale(1.1, 1.1);
+    }
+
+    .alertheading{
+      margin-bottom: 16px;
+    }
+
+    .alertborder{
+      border: solid;
+      padding: 10px;
+    }
+
+    .alertbox{
+      margin-top: 30px;
+    }
+
+  </style>
+</head>
+
+<body style="background-color: #58A4B0;">
+  <div>
+    <div style="display: flex;
+    justify-content: center; background-color: #D35269; text-decoration: underline; text-decoration-color: #ffc3c3;">
+      <h1 style="font-size: 100px; margin-bottom: 30px; color: #ffc3c3;">Weather Accuator</h1>
+      
+    </div>
+    <div class = "row">
+      <div class="col-md-9">
+        <div id="currentbox">
+          <div class="row-container">
+            <div class="row">
+              <div class="col-md-2" style="display: flex;
+                flex-direction: column;
+                align-items: center; margin-right: 8%;">
+                <div class="search-main">
+                  <p class="search-text">Region:</p>
+                  <div class="dropdown search-buttons">
+                    <button style="width: 171.16px;" class="btn btn-secondary dropdown-toggle" type="button"
+                      id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                      Dropdown button
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                      <li><a class="dropdown-item region-item" href="#">Africa</a></li>
+                      <li><a class="dropdown-item region-item" href="#">Antarctica</a></li>
+                      <li><a class="dropdown-item region-item" href="#">Arctic</a></li>
+                      <li><a class="dropdown-item region-item" href="#">Asia</a></li>
+                      <li><a class="dropdown-item region-item" href="#">Central America</a></li>
+                      <li><a class="dropdown-item region-item" href="#">Europe</a></li>
+                      <li><a class="dropdown-item region-item" href="#">Middle East</a></li>
+                      <li><a class="dropdown-item region-item" href="#">North America</a></li>
+                      <li><a class="dropdown-item region-item" href="#">Oceania</a></li>
+                      <li><a class="dropdown-item region-item" href="#">South America</a></li>
+        
+                    </ul>
+                  </div>
+                </div>
+                <div class="search-main">
+                  <p class="search-text">Country:</p>
+                  <div class="dropdown search-buttons">
+                    <button style="width: 171.16px;" class="btn btn-secondary dropdown-toggle" type="button"
+                      id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                      Dropdown button
+                    </button>
+                    <ul class="dropdown-menu" id="countrymenu" aria-labelledby="dropdownMenuButton2">
+        
+                    </ul>
+                  </div>
+                </div>
+                <div class="search-main" style="width: 171.16px;">
+                  <p class="search-text">City:</p>
+                  <div class="search-buttons">
+                    <input id="citysearch" type="text" style="width: 171.16px;">
+                  </div>
+                </div>
+                <div>
+                  <button style="width: 171.16px;" onclick="weathersearch()" class="btn btn-outline-success"
+                    type="submit">Search</button>
+                </div>
+        
+              </div>
+              <div class="col-md-3 currweather carddetails">
+                
+                <h3 id="display-title" class="forecast-title" style="text-align:center; text-decoration:underline;">Generic</h3>
+                <div>
+                  <img id="weatherimage" style="margin-top: 45px;"class="image-size" src="./images/1-s.png" alt="photonic photo">
+                </div>
+                <p class="temps" style="margin-bottom: 0;">Current Temp: <span id="curdayF"></span> F</p>
+                <p class="temps">Current Temp: <span id="curdayC"></span> C</p>
+                
+              </div>
+              <div class="col-md-4 carddetails" style="margin-left: 35px;">
+                <h3 class="forecast-title" style="text-decoration: underline; text-align: center;">Extended Information</h3>
+                <p id="extended-title" style="font-size: 18px; text-align:center;">Watch out for thunderstorms on Sunday</p>
+                <p id="extended-time" style="font-size: 18px; text-align:center;">time</p>
+                <div style="display: flex;
+                justify-content: space-around;">
+                <div>
+                  <img id="extended-image"class="image-size" src="./images/1-s.png" alt="Cdaytemp">
+                  <p id="extended-infoday"class="temps" style="margin-right: 20px;">day condition</p>
+                  <p class="temps"><span id="extended-tempmax">Max temp</span> F</p>
+                </div>
+                <div>
+                  <img id="extended-image2"class="image-size" src="./images/1-s.png" alt="Fdaytemp">
+                  <p id="extended-infonight"class="temps"> night condition</p>
+                  <p class="temps"> <span id="extended-tempmin">Min temp</span> F</p>
+                </div>  
+                  
+                </div>
+                
+              </div>
+              
+              
+            </div>
+          </div>
+        </div>
+        <h3 style="text-align:center; text-decoration:underline; margin-bottom: 55px;
+    margin-top: 100px;
+    font-size: 50px;">
+      5 Day Forecast
+    </h3>
+    <div id="forecastpage">
+      <div class="row" id="5daydisplay" style="display: flex;
+      justify-content: center;">
+      
+      </div>
+        
+        
+    </div>
+      </div>
+      
+      <div id="alertsbox" style="background-color: bisque;" class="col-md-3">
+        <h3 style="text-decoration:underline; margin-top: 12px;">Local Alerts</h3>
+        <div id="inneralertbox">
+        
+        <div id="borderbox">
+          
+          <p>No alerts</p>
+        </div>
+        
+        </div>
+        
+
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+  <script>
+    // var key = F8pDmN0EkG3dGzk2eEGNL4cWyQnQbLLo
+    // var backup = WnLs5tYdAgcG0ajTOBCy0VHMPHpgRXfA
+
+    // news key = 4e405b0e0dae43d389694526b6417c4e
+
+    // weatherbit key = 098cbb3fc6e2437199fb38ed60626947
+
+
+    // var news = await fetch("https://newsapi.org/v2/everything?q="+newsquery+"&from="+yesterdate+"&to="+todaydate+"&sortBy=popularity&apiKey=4e405b0e0dae43d389694526b6417c4e");
+
+    
+
+    
+    
+
+
+
+    var APIKEY = "F8pDmN0EkG3dGzk2eEGNL4cWyQnQbLLo";
+
+    var regions = document.getElementsByClassName("region-item");
+
+    var regioncode;
+
+    var countrycode;
+
+    var cityname;
+
+    var regionslist = {
+      "Europe": "EUR",
+      "Africa": "AFR",
+      "Antarctica": "ANT",
+      "Arctic": "ARC",
+      "Asia": "ASI",
+      "Central America": "CAC",
+      "Middle East": "MEA",
+      "North America": "NAM",
+      "Oceania": "OCN",
+      "South America": "SAM"
+    }
+    console.log(regionslist["Europe"]);
+
+    Array.from(regions).forEach(element => {
+      element.addEventListener("click", async function () {
+        console.log(this.innerText);
+        document.getElementById("dropdownMenuButton1").innerText = this.innerText; // this refers to item or element on page clicked
+        regioncode = regionslist[this.innerText]; // stores region code
+        // use region code to display countries in dropdown.
+
+
+        var choice = await fetch("http://dataservice.accuweather.com/locations/v1/countries/" + regioncode + "?apikey="+APIKEY);
+
+        document.getElementById("countrymenu").innerHTML = "";
+
+        var countriesdisplay = await choice.json();
+        console.log(countriesdisplay);
+        Array.from(countriesdisplay).forEach(country => {
+          var countryli = document.createElement("li");
+          var atag = document.createElement("a");
+          atag.setAttribute("class", "dropdown-item");
+          atag.setAttribute("data-countrycode", country["ID"]); // countryid stored as attribute of atag
+          atag.innerText = country["EnglishName"]; // object requires calling of name of key instead of slot
+          atag.addEventListener("click", function () {
+            document.getElementById("dropdownMenuButton2").innerText = this.innerText;
+            countrycode = this.getAttribute("data-countrycode"); // countrycode becomes equal to value of data-countrycode attribute of clicked country
+            console.log(countrycode); // needs country code
+          })
+          countryli.appendChild(atag);
+          document.getElementById("countrymenu").appendChild(countryli);
+
+          
+
+
+        });
+      })
+    });
+
+    async function weathersearch() {
+      cityname = document.getElementById("citysearch").value; // input tags require .value
+
+      var cityurl = await fetch("http://dataservice.accuweather.com/locations/v1/cities/" + countrycode + "/search?apikey="+APIKEY+"&q=" + cityname); // api that calls city
+
+      var resultsearch = await cityurl.json();
+      console.log(resultsearch);
+
+      if(resultsearch.length == 0){
+        alert("City name is misspelt or does not exist");
+        return;
+      }
+      
+
+      var conditionsurl = await fetch("http://dataservice.accuweather.com/currentconditions/v1/" + resultsearch[0]["Key"] + "?apikey="+APIKEY) // api for weather
+
+      var conditionresult = await conditionsurl.json();
+      console.log(conditionresult);
+
+      
+
+      // use city key from result to display weather forecast from forecast api.
+       // object
+      document.getElementById("display-title").innerText = resultsearch[0]["EnglishName"];
+      document.getElementById("curdayF").innerText = conditionresult[0]["Temperature"]["Imperial"]["Value"];
+      document.getElementById("curdayC").innerText = conditionresult[0]["Temperature"]["Metric"]["Value"];
+      document.getElementById("weatherimage").setAttribute("src", "./images/"+conditionresult[0]["WeatherIcon"]+"-s.png");
+
+      
+      var cityid = resultsearch[0]["Key"];
+      console.log(cityid);
+
+      var currconditions = await fetch("http://dataservice.accuweather.com/forecasts/v1/daily/1day/"+cityid+"?apikey="+APIKEY);
+
+      var currresult = await currconditions.json();
+      console.log(currresult);
+
+      document.getElementById("extended-title").innerText = currresult.Headline["Text"];
+      document.getElementById("extended-image").setAttribute("src", "./images/"+currresult.DailyForecasts[0].Day["Icon"]+"-s.png");
+      document.getElementById("extended-infoday").innerText = currresult.DailyForecasts[0].Day["IconPhrase"];
+      document.getElementById("extended-tempmax").innerText = currresult.DailyForecasts[0].Temperature.Maximum["Value"];
+
+      document.getElementById("extended-image2").setAttribute("src", "./images/"+currresult.DailyForecasts[0].Night["Icon"]+"-s.png");
+      document.getElementById("extended-infonight").innerText = currresult.DailyForecasts[0].Night["IconPhrase"];
+      document.getElementById("extended-tempmin").innerText = currresult.DailyForecasts[0].Temperature.Minimum["Value"];
+
+      var str = currresult.DailyForecasts[0]["Date"];
+      var newString = str.substring(19,25); // +03:00
+      console.log(newString);
+
+      // 1:00, 1:30, 1:45
+      if(newString.includes(":30")){
+        newString = newString.substring(0,3)+(".5"); // +03.5
+        
+      }
+      else if(newString.includes(":45")){
+        newString = newString.substring(0,3)+(".75"); // +03.75
+      }
+      else if(newString.includes(":00")){
+        console.log("test");
+        newString = newString.substring(0,3); // +03
+
+      }
+      console.log(newString);
+
+      calcTime(newString);
+
+      // document.getElementById("extended-time").innerText = currresult.DailyForecasts[0]["Date"];
+      
+      // display time using api dailyforecast date where GMT + or - the offset displayed
+      // ex. 00+02:00
+      // how to call gmt time to offset for current time of location?
+
+      
+
+      fiveforecast(cityid);
+
+      weatheralerts(cityname, countrycode);
+
+      localnews(countrycode);
+
+      }
+
+
+      function calcTime(offset) {
+    
+    var d = new Date(); // my location
+
+    // convert to msec
+    // subtract local time zone offset
+    // get UTC time in msec
+    var utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+
+    // create new Date object for different city
+    // using supplied offset
+    var nd = new Date(utc + (3600000*offset));
+
+    // return time as a string
+    // + nd.toLocaleString();
+    document.getElementById("extended-time").innerText = nd.toLocaleString();
+}
+
+// add degrees to tempurature display.
+
+  async function fiveforecast(cityid){
+
+  var fiveday = await fetch("http://dataservice.accuweather.com/forecasts/v1/daily/5day/"+cityid+"?apikey="+APIKEY);
+
+      var fivedayresults = await fiveday.json();
+
+      document.getElementById("5daydisplay").innerHTML = "";
+
+      Array.from(fivedayresults.DailyForecasts).forEach(element =>{
+
+        var box = document.createElement("div");
+        box.setAttribute("class", "col-md-3 boxdetails carddetails");
+       
+        var daterow = document.createElement("div");
+        daterow.setAttribute("class", "row");
+        box.appendChild(daterow);
+
+        var datebox = document.createElement("p");
+        datebox.setAttribute("class", "forecastdate");
+        var date = element.Date; 
+        var datesubstring = date.substring(0,10);
+        
+        datebox.innerText = datesubstring;
+        daterow.appendChild(datebox);
+
+        var temprow = document.createElement("div");
+        temprow.setAttribute("class", "temprops");
+        box.appendChild(temprow);
+        
+        var tempbox = document.createElement("p");
+        tempbox.innerHTML = `Low: <span class="forecasttemplow">${element.Temperature.Minimum.Value}</span> F`;
+        temprow.appendChild(tempbox);
+
+        var tempbox2 = document.createElement("p");
+        tempbox2.innerHTML = `High: <span class="forecasttemphigh">${element.Temperature.Maximum.Value}</span> F`;
+        temprow.appendChild(tempbox2);
+        
+
+
+        var newrow = document.createElement("div");
+        newrow.setAttribute("class", "row");
+        box.appendChild(newrow); 
+
+
+
+
+        var daybox = document.createElement("div");
+        daybox.setAttribute("class", "col-md-6 daydemens");
+        newrow.appendChild(daybox);
+
+        
+        
+
+        var forecastimage = document.createElement("img");
+        forecastimage.setAttribute("class","forecastimage");
+        forecastimage.setAttribute("src", "./images/"+element.Day.Icon+"-s.png");
+        daybox.appendChild(forecastimage);
+
+        
+
+        var conditionbox = document.createElement("p");
+        conditionbox.setAttribute("class", "forecastweathercons");
+        conditionbox.innerText = element.Day.IconPhrase;
+        daybox.appendChild(conditionbox);
+
+
+
+        var nightbox = document.createElement("div");
+        nightbox.setAttribute("class", "col-md-6 nightdemens");
+        newrow.appendChild(nightbox);
+
+
+        var forecastimage = document.createElement("img");
+        forecastimage.setAttribute("class","forecastimage");
+        forecastimage.setAttribute("src", "./images/"+element.Night.Icon+"-s.png");
+        nightbox.appendChild(forecastimage);
+
+
+        var conditionbox = document.createElement("p");
+        conditionbox.setAttribute("class", "forecastweathercons");
+        conditionbox.innerText = element.Night.IconPhrase;
+        nightbox.appendChild(conditionbox);
+
+
+        document.getElementById("5daydisplay").appendChild(box);
+        
+
+        
+        
+
+        
+
+
+
+      })
+
+      
+
+
+}
+
+async function weatheralerts(cityname, countrycode){
+
+  var weatheralerts = await fetch("https://api.weatherbit.io/v2.0/alerts?city="+cityname+"&country="+countrycode+"&key=098cbb3fc6e2437199fb38ed60626947");
+
+      var alertsresult = await weatheralerts.json();
+      console.log(alertsresult);
+
+      if(alertsresult.alerts.length > 0){
+        document.getElementById("inneralertbox").innerHTML = "";
+
+      Array.from(alertsresult.alerts).forEach(element =>{
+         var innerbox = document.createElement("div");
+         innerbox.setAttribute("class", "alertbox");
+        
+
+         var heading = document.createElement("h4");
+         heading.setAttribute("class", "alertheading");
+        heading.innerHTML = `<span style="text-decoration:underline;">Severity:</span>  <span id="alerttype"> ${element.severity}</span>`;
+        
+        innerbox.appendChild(heading);
+
+        var borderbox = document.createElement("div");
+        borderbox.setAttribute("class", "alertborder");
+
+        var heading2 = document.createElement("h4");
+         heading2.innerHTML = `<span style="text-decoration:underline;">Warning:</span><span id="alerttext"> ${element.title}</span>`;
+
+        borderbox.appendChild(heading2);
+
+        var alertdescription = document.createElement("p");
+        alertdescription.innerText = element.description;
+
+        borderbox.appendChild(alertdescription);
+
+        innerbox.appendChild(borderbox);
+
+         
+
+
+         document.getElementById("inneralertbox").appendChild(innerbox);
+      })
+      }
+
+      
+
+
+
+}
+
+async function localnews(countrycode){
+
+  var news = await fetch("https://newsapi.org/v2/top-headlines?country="+countrycode+"&apiKey=4e405b0e0dae43d389694526b6417c4e");
+
+  var newsresult = await news.json();
+  console.log(newsresult);
+
+
+}
+
+ 
+          
+      
+
+    function test() {
+      console.log("test");
+    }
+
+
+  </script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>
